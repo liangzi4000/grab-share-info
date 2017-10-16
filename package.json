@@ -1,0 +1,24 @@
+{
+  "name": "grab-share-info",
+  "version": "1.0.0",
+  "description": "Grab share information",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liangzi4000/grab-share-info.git"
+  },
+  "author": "Bruce Ye",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/liangzi4000/grab-share-info/issues"
+  },
+  "homepage": "https://github.com/liangzi4000/grab-share-info#readme",
+  "dependencies": {
+    "mongodb-stitch": "^1.0.9",
+    "puppeteer": "^0.12.0"
+  }
+}

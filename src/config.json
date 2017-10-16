@@ -1,0 +1,14 @@
+{
+    "url": "http://quote.eastmoney.com/{stockcode}.html?",
+    "stocklist": [
+        "sh600298",
+        "sh603288"
+    ],
+    "output": "result.json",
+    "environment": {
+        "resolution": {
+            "width": 1366,
+            "height": 662
+        }
+    }
+}
