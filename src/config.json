@@ -1,13 +1,76 @@
 {
     "url": "http://quote.eastmoney.com/{stockcode}.html?",
+    "sinayjbburl": "http://vip.stock.finance.sina.com.cn/q/go.php/vFinanceAnalyze/kind/history/index.phtml?symbol={stockcode}",
     "stocklist": [
-        "sz002415","sz002142","sh601899","sh601933","sh600808","sh601766","sz002236","sh600085","sh600519","sh600000","sz000898","sz002508","sh601009","sh600887","sh601988","sz000625","sh600271","sz000538","sh600009","sh600016","sh600030","sh600066","sz002456","sh600029","sh600600","sz000418","sh603288","sh601888","sz000338","sh600993","sz002186","sz300271","sh600115","sz000333","sz300015","sz000651","sh600699","sz300124","sh600298","sh600216","sh600633","sz002480","sh600536","sh600718","sh600588","sh600309","sz300412","sz300017","sh601600","sz002739","sz002415"
+        "sz002415",
+        "sz002142",
+        "sh601899",
+        "sh601933",
+        "sh600808",
+        "sh601766",
+        "sz002236",
+        "sh600085",
+        "sh600519",
+        "sh600000",
+        "sz000898",
+        "sz002508",
+        "sh601009",
+        "sh600887",
+        "sh601988",
+        "sz000625",
+        "sh600271",
+        "sz000538",
+        "sh600009",
+        "sh600016",
+        "sh600030",
+        "sh600066",
+        "sz002456",
+        "sh600029",
+        "sh600600",
+        "sz000418",
+        "sh603288",
+        "sh601888",
+        "sz000338",
+        "sh600993",
+        "sz002186",
+        "sz300271",
+        "sh600115",
+        "sz000333",
+        "sz300015",
+        "sz000651",
+        "sh600699",
+        "sz300124",
+        "sh600298",
+        "sh600216",
+        "sh600633",
+        "sz002480",
+        "sh600536",
+        "sh600718",
+        "sh600588",
+        "sh600309",
+        "sz300412",
+        "sz300017",
+        "sh601600",
+        "sz002739",
+        "sz002415"
     ],
     "output": "result.json",
+    "screenshot": "./screenshot",
     "environment": {
         "resolution": {
-            "width": 1366,
-            "height": 662
+            "width": 1600,
+            "height": 790
+        }
+    },
+    "dbconfig": {
+        "user": "sa",
+        "password": "P@55w0rd",
+        "server": "LIANGZI-PC",
+        "database": "stocks",
+        "pool": {
+            "max": 10,
+            "min": 0,
+            "idleTimeoutMillis": 30000
         }
     }
 }
