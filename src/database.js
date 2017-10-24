@@ -8,21 +8,11 @@ const _spAddFinancialReport = '[dbo].[Proc_FinancialReports_Ins]';
 const pool = new sql.ConnectionPool(config.dbconfig);
 
 module.exports = {
-    OpenConnection: async function () {
-        pool.connect((err) => {
-            if (err != null) {
-                console.log('Open database connection failed:');
-                console.dir(err);
-            }
-        });
+    OpenConnection: function () {
+        return pool.connect();
     },
-    CloseConnection: async function () {
-        pool.close((err) => {
-            if (err != null) {
-                console.log('Close database connection failed:');
-                console.dir(err);
-            }
-        });
+    CloseConnection: function () {
+        return pool.close();
     },
     AddStock: async function (args) {
         await this.ExecuteStoredProc(_spAddStock, args);

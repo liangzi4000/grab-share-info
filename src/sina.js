@@ -35,12 +35,17 @@ console.time('total');
         let code = config.stocklist[i].replace(/[a-zA-Z]/g, '');
         let res = await db.CheckExist(code);
         //let res = await db.ExecuteQuery(`select * from dbo.stocklist where code = '${code}'`);
-        console.log(res);
-        continue;
-        console.log(`Processing stock ${config.stocklist[i]}`);
-        await page.goto(config.sinayjbburl.replace('{stockcode}', code), {
-            timeout: 60000
-        });
+        if (res == true) continue;
+        //console.log(`Processing stock ${config.stocklist[i]}`);
+        try {
+            await page.goto(config.sinayjbburl.replace('{stockcode}', code), {
+                timeout: 60000
+            });
+        }
+        catch (err) {
+            console.log(`Processing stock ${config.stocklist[i]} timeout.`);
+            contine;
+        }
         await page.screenshot({ path: `${config.screenshot}/${config.stocklist[i]}.png`, fullPage: true });
         let stockparams = await page.evaluate(() => {
             let stockinfo = document.querySelectorAll('#table2 tbody tr:nth-child(1) td');
