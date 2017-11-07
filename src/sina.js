@@ -37,15 +37,12 @@ console.time('total');
         //let res = await db.ExecuteQuery(`select * from dbo.stocklist where code = '${code}'`);
         if (res == true) continue;
         //console.log(`Processing stock ${config.stocklist[i]}`);
-        try {
-            await page.goto(config.sinayjbburl.replace('{stockcode}', code), {
-                timeout: 60000
-            });
-        }
-        catch (err) {
+        await page.goto(config.sinayjbburl.replace('{stockcode}', code), {
+            timeout: 60000
+        }).catch(err => {
             console.log(`Processing stock ${config.stocklist[i]} timeout.`);
             contine;
-        }
+        });
         await page.screenshot({ path: `${config.screenshot}/${config.stocklist[i]}.png`, fullPage: true });
         let stockparams = await page.evaluate(() => {
             let stockinfo = document.querySelectorAll('#table2 tbody tr:nth-child(1) td');

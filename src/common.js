@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const sep = path.sep;
 const cfg = require('./config.json');
+const db = require('./database');
 
 module.exports = {
     // Remove all files and directories on speicified directory, directory will be created if it does not exist.
@@ -63,7 +64,7 @@ module.exports = {
     },
 
     // Searh files by extension and execute callback function
-    searchFolder: function (path, ext, callback) {
+    searchFolderCallback: function (path, ext, callback) {
         if (typeof callback === "function") {
             fs.readdir(path, (err, files) => {
                 let reg = new RegExp(`\.${ext}$`, "i");
@@ -75,4 +76,92 @@ module.exports = {
             });
         }
     },
+
+    // Search files by extension and return promise
+    searchFolderPromise: function (path, ext) {
+        return new Promise((resolve, reject) => {
+            fs.readdir(path, (err, files) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    let reg = new RegExp(`\.${ext}$`, "i"); // Put global search flag will fail the test
+                    resolve(files.filter(x => reg.test(x)));
+                }
+            });
+        });
+    },
+
+    // Execute all sql files in speicified folder
+    executeAllSQLFiles: async function (path) {
+        await db.OpenConnection();
+        await this.searchFolderPromise(path, "sql").then(files => {
+            return Promise.all(
+                files.map(file => {
+                    let targetfile = `${path}/${file}`;
+                    return new Promise((resolve, reject) => {
+                        fs.readFile(targetfile, 'utf8', (err, data) => {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                let result = db.ExecuteQueryPromise(data);
+                                resolve(result);
+                            }
+                        })
+                    })
+                })
+            )
+        });
+        await db.CloseConnection();
+    }
 }
+
+
+
+/* Promise.all resolve all recursive promises
+(async () => {
+    console.log('start');
+    await Promise.all(
+        [1, 2, 3, 4].map(x => {
+            return new Promise((resolve, reject) => {
+                console.log('1st promise');
+                let result = secondpromise(x);
+                resolve(result);
+            })
+        })
+    ).then(x => console.log(x));
+    console.log('end');
+})();
+
+function secondpromise(x) {
+    return new Promise((res, rej) => {
+        console.log('2nd promise');
+        let result = thirdpromise(x);
+        res(result);
+    })
+}
+
+function thirdpromise(x) {
+    return new Promise((res, rej) => {
+        console.log('3rd promise');
+        setTimeout(res(x * 3), 300);
+    })
+} 
+
+Output:
+--------------------------------------------------
+start
+1st promise
+2nd promise
+3rd promise
+1st promise
+2nd promise
+3rd promise
+1st promise
+2nd promise
+3rd promise
+1st promise
+2nd promise
+3rd promise
+[ 3, 6, 9, 12 ]
+end
+*/

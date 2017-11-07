@@ -44,6 +44,10 @@ module.exports = {
             });
     },
 
+    ExecuteQueryPromise: function (sqlquery){
+        return pool.request().query(sqlquery);
+    },
+
     ExecuteStoredProc: async function (sp, args) {
         let arglist = args.map(i => `'${i.replace(/'/g, "''")}'`).join(",");
         return pool.request()

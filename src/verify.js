@@ -2,6 +2,7 @@ const config = require('./config.json');
 const common = require('./common');
 const fs = require('fs');
 
+
 common.searchFolder(config.sqlfolder, "rpt", (file) => {
     let targetfile = `${config.sqlfolder}/${file}`;
     fs.readFile(targetfile, 'utf8', (err, data) => {
