@@ -5,6 +5,8 @@ const _spAddStock = '[dbo].[Proc_StockList_Ins]';
 const _spAddNotice = '[dbo].[Proc_Notices_Ins]';
 const _spAddFinancialReport = '[dbo].[Proc_FinancialReports_Ins]';
 
+const _spAddYJBB = '[EST].[Proc_yjbb_Ins]';
+
 const pool = new sql.ConnectionPool(config.dbconfig);
 
 module.exports = {

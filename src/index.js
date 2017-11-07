@@ -6,16 +6,6 @@ const config = require('./config.json');
 const client = new stitch.StitchClient('grab-share-mongodb-ugdgr');
 const db = client.service('mongodb', 'mongodb-atlas').db('StockDB');
 
-/* client.login().then(() =>
-db.collection.drop()
-db.collection('CoreIndicators').find({}).then(docs=>{
-    console.log(docs);
-}) 
-db.collection('CoreIndicators').insert([{ "_id":"Bruce", "hello": "world" }])
-);
-console.log("Completed");
-return; */
-
 (async () => {
     const browser = await puppeteer.launch({
         headless: true, args: [
@@ -39,8 +29,8 @@ return; */
     await page.setViewport({ width: config.environment.resolution.width, height: config.environment.resolution.height });
     for (let i = 0; i < config.stocklist.length; i++) {
         console.log(`Processing stock ${config.stocklist[i]}`);
-        await page.goto(config.url.replace('{stockcode}', config.stocklist[i]), {
-            timeout: 0
+        await page.goto(config.url.replace('{stockcode}', config.stocklist[i]),{
+            timeout:0
         });
 
         let indicators = await page.evaluate(() => {
@@ -54,8 +44,8 @@ return; */
             return result;
         });
         indicators["_id"] = config.stocklist[i];
-
-        await client.login().then(() =>
+        
+        client.login().then(() =>
             db.collection('CoreIndicators').insert([indicators])
         );
     }
