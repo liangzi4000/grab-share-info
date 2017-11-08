@@ -1,13 +1,12 @@
 const sql = require('mssql');
-const config = require('./config.json');
+const cfg = require('./config.json');
 
-const _spAddStock = '[dbo].[Proc_StockList_Ins]';
+/* const _spAddStock = '[dbo].[Proc_StockList_Ins]';
 const _spAddNotice = '[dbo].[Proc_Notices_Ins]';
 const _spAddFinancialReport = '[dbo].[Proc_FinancialReports_Ins]';
+const _spAddYJBB = '[EST].[Proc_yjbb_Ins]'; */
 
-const _spAddYJBB = '[EST].[Proc_yjbb_Ins]';
-
-const pool = new sql.ConnectionPool(config.dbconfig);
+const pool = new sql.ConnectionPool(cfg.dbconfig);
 
 module.exports = {
     OpenConnection: function () {
@@ -16,7 +15,10 @@ module.exports = {
     CloseConnection: function () {
         return pool.close();
     },
-    AddStock: async function (args) {
+    ExecuteQueryPromise: function (sqlquery){
+        return pool.request().query(sqlquery);
+    }
+/*     AddStock: async function (args) {
         await this.ExecuteStoredProc(_spAddStock, args);
     },
 
@@ -44,10 +46,6 @@ module.exports = {
             });
     },
 
-    ExecuteQueryPromise: function (sqlquery){
-        return pool.request().query(sqlquery);
-    },
-
     ExecuteStoredProc: async function (sp, args) {
         let arglist = args.map(i => `'${i.replace(/'/g, "''")}'`).join(",");
         return pool.request()
@@ -55,5 +53,6 @@ module.exports = {
             .catch(err => {
                 console.log(`EXECUTE ${sp} ${arglist} failed:`);
             });
-    }
+    },
+ */
 }

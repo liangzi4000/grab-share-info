@@ -1,17 +1,12 @@
 const puppeteer = require('puppeteer');
-const config = require('./config.json');
-const db = require('./database');
+const cfg = require('./config.json');
+const stocklist = require('./stocklist.json');
 const common = require('./common');
 
-common.createFolder(config.screenshot);
-console.time('total');
 (async () => {
-    /*     await db.AddStock('B\'ru\'ce','Ye');
-        console.log('done')
-        return; */
-
+    console.time('total');
     const browser = await puppeteer.launch({
-        headless: false, args: [
+        headless: true, args: [
             '--start-maximized',
             //'--kiosk',
             //'--start-fullscreen',
@@ -29,21 +24,18 @@ console.time('total');
         //slowMo:120
     });
     const page = await browser.newPage();
-    await page.setViewport({ width: config.environment.resolution.width, height: config.environment.resolution.height });
-    await db.OpenConnection();
-    for (let i = 0; i < config.stocklist.length; i++) {
-        let code = config.stocklist[i].replace(/[a-zA-Z]/g, '');
-        let res = await db.CheckExist(code);
-        //let res = await db.ExecuteQuery(`select * from dbo.stocklist where code = '${code}'`);
-        if (res == true) continue;
-        //console.log(`Processing stock ${config.stocklist[i]}`);
-        await page.goto(config.sinayjbburl.replace('{stockcode}', code), {
-            timeout: 60000
-        }).catch(err => {
-            console.log(`Processing stock ${config.stocklist[i]} timeout.`);
-            contine;
+    await page.setViewport({ width: cfg.environment.resolution.width, height: cfg.environment.resolution.height });
+    for (let i = 0; i < stocklist.data.length; i++) {
+        let code = stocklist.data[i].replace(/[a-zA-Z]/g, '');
+        await page.goto(cfg.urlsinagsjj.replace('{stockcode}', code), {
+            timeout: 0
         });
-        await page.screenshot({ path: `${config.screenshot}/${config.stocklist[i]}.png`, fullPage: true });
+        let tbldata = await page.evaluate(() => {
+            return Array.from(document.querySelectorAll('#dt_1 tbody tr'))
+                .map(item => Array.from(item.querySelectorAll('td'))
+                    .map(x => x.textContent));
+        });
+        
         let stockparams = await page.evaluate(() => {
             let stockinfo = document.querySelectorAll('#table2 tbody tr:nth-child(1) td');
             return [stockinfo[0].textContent, stockinfo[1].textContent];
@@ -66,27 +58,8 @@ console.time('total');
         for (let i = 0; i < announceparamslist.length; i++) {
             await db.AddNotice([stockparams[0]].concat(announceparamslist[i]));
         }
-
-        /* 
-        let indicators = await page.evaluate(() => {
-            let list = Array.from(document.querySelectorAll('#rtp2 tr td'));
-            let result = {};
-            list.forEach((item) => {
-                console.log(item.textContent);
-                let arr = item.textContent.split('：');
-                result[arr[0].trim()] = arr[1].trim();
-            })
-            return result;
-        });
-        indicators["_id"] = config.stocklist[i];
-
-        await client.login().then(() =>
-            db.collection('CoreIndicators').insert([indicators])
-        ); */
     }
-    await db.CloseConnection();
     await browser.close();
-    console.log('Done');
     console.timeEnd('total');
 })();
 

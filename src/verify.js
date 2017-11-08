@@ -1,10 +1,9 @@
-const config = require('./config.json');
+const cfg = require('./config.json');
 const common = require('./common');
 const fs = require('fs');
-
-
-common.searchFolder(config.sqlfolder, "rpt", (file) => {
-    let targetfile = `${config.sqlfolder}/${file}`;
+/* 
+common.searchFolder(cfg.sqlfolderyjbb, "rpt", (file) => {
+    let targetfile = `${cfg.sqlfolderyjbb}/${file}`;
     fs.readFile(targetfile, 'utf8', (err, data) => {
         if (data.replace(/\(1 rows affected\)/g, '').trim() != "") {
             console.log(file);
@@ -15,3 +14,4 @@ common.searchFolder(config.sqlfolder, "rpt", (file) => {
         }
     })
 });
+ */

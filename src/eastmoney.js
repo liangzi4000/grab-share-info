@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
-const config = require('./config.json');
+const cfg = require('./config.json');
+const stocklist = require('./stocklist.json');
 const common = require('./common');
 
 (async () => {
@@ -22,19 +23,70 @@ const common = require('./common');
         //slowMo:120
     });
     const page = await browser.newPage();
-    await page.setViewport({ width: config.environment.resolution.width, height: config.environment.resolution.height });
-    for (let i = 0; i < config.stocklist.length; i++) {
-        console.log(`Processing stock ${config.stocklist[i]}`);
-        let curStock = config.stocklist[i].substr(2);
-        await page.goto(config.urleastmoneyyjbb.replace('{stockcode}', curStock), {
+    await page.setViewport({ width: cfg.environment.resolution.width, height: cfg.environment.resolution.height });
+    for (let i = 0; i < stocklist.data.length; i++) {
+        console.log(`Processing stock ${stocklist.data[i]}`);
+        let curStock = stocklist.data[i].substr(2);
+        await page.goto(cfg.urleastmoneyyjbb.replace('{stockcode}', curStock), {
             timeout: 0
         });
 
         let tbldata = await page.evaluate(() => {
+            let result = [];
+            result[0] = document.querySelector('#stockName').textContent.split('(')[1].split('.')[0] // code
+            result[1] = document.querySelector('#stockName').textContent.split('(')[0]; // company name
+            result[2] = document.querySelector('#comInfo1 tbody tr:nth-child(1) td:nth-child(2)').textContent; //Chinese Name
+            result[3] = document.querySelector('#comInfo1 tbody tr:nth-child(2) td:nth-child(2)').textContent; //English Name
+            result[4] = document.querySelector('#comInfo1 tbody tr:nth-child(3) td:nth-child(2)').textContent; //Exchange 
+            result[5] = document.querySelector('#comInfo1 tbody tr:nth-child(4) td:nth-child(2)').textContent; //IPO Price
+            result[6] = document.querySelector('#comInfo1 tbody tr:nth-child(5) td:nth-child(2)').textContent; //Founded Date
+            result[7] = document.querySelector('#comInfo1 tbody tr:nth-child(6) td:nth-child(2)').textContent; //Institution Type
+            result[8] = document.querySelector('#comInfo1 tbody tr:nth-child(7) td:nth-child(2)').textContent; //Secretariat
+            result[9] = document.querySelector('#comInfo1 tbody tr:nth-child(8) td:nth-child(2)').textContent; //Sec Phone
+            result[10] = document.querySelector('#comInfo1 tbody tr:nth-child(9) td:nth-child(2)').textContent; //Sec Fax
+            result[11] = document.querySelector('#comInfo1 tbody tr:nth-child(10) td:nth-child(2)').textContent; //Sec email
+            result[12] = document.querySelector('#comInfo1 tbody tr:nth-child(11) td:nth-child(2)').textContent; //Postcode
+            result[13] = document.querySelector('#comInfo1 tbody tr:nth-child(12) td:nth-child(2)').textContent;
+            result[14] = document.querySelector('#comInfo1 tbody tr:nth-child(13) td:nth-child(2)').textContent;
+            result[15] = document.querySelector('#comInfo1 tbody tr:nth-child(14) td:nth-child(2)').textContent;
+            result[16] = 
+            result[17] = 
+
             return Array.from(document.querySelectorAll('#dt_1 tbody tr'))
                 .map(item => Array.from(item.querySelectorAll('td'))
                     .map(x => x.textContent));
         });
+
+        /*
+        EXEC	@return_value = [SIA].[Proc_gsjj_Ins]
+		@Code = N'1',
+		@ShortName = N'1',
+		@FullNameCN = N'1',
+		@FullNameEN = N'1',
+		@StockExchange = N'1',
+		@IPODate = N'1',
+		@IPOPrice = 1,
+		@PrimaryDistribution = N'1',
+		@FoundedDate = N'1',
+		@RegisteredCapital = N'1',
+		@InstitutionType = N'1',
+		@OrganizationType = N'1',
+		@BoardSecretariat = N'1',
+		@BoardSecretariatPhone = N'1',
+		@BoardSecretariatFax = N'1',
+		@BoardSecretariatEmail = N'1',
+		@Postcode = N'1',
+		@Phone = N'1',
+		@Fax = N'1',
+		@Email = N'1',
+		@Website = N'1',
+		@DisclosureWebsite = N'1',
+		@NameChangeHistory = N'1',
+		@RegisteredAddress = N'1',
+		@OfficeAddress = N'1',
+		@Profile = N'1',
+        @BusinessScope = N'1'
+        */
 
         let nextPage = null;
         let currentPage = 1;
